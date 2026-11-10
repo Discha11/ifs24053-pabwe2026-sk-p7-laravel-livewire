@@ -21,7 +21,7 @@
                     </td>
                 </tr>
             @empty
-                <tr><td colspan="5" class="px-4 py-6 text-center text-slate-500">Belum ada user.</td></tr>
+                <tr><td colspan="5" class="px-4 py-6 text-center text-slate-600">Belum ada user.</td></tr>
             @endforelse
             </tbody>
         </table>

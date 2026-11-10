@@ -29,7 +29,7 @@
                     <td class="px-4 py-3"><span class="rounded-full px-2 py-1 text-xs {{ $stock->status->badgeClass() }}">{{ $stock->status->label() }}</span></td>
                 </tr>
             @empty
-                <tr><td colspan="5" class="px-4 py-6 text-center text-slate-500">User ini belum punya stok.</td></tr>
+                <tr><td colspan="5" class="px-4 py-6 text-center text-slate-600">User ini belum punya stok.</td></tr>
             @endforelse
             </tbody>
         </table>

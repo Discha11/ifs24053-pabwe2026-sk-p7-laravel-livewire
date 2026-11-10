@@ -4,7 +4,7 @@
         <div class="flex flex-wrap gap-2">
             <button wire:click="openCreate" class="rounded bg-slate-900 px-3 py-2 text-sm text-white">+ Tambah</button>
             <button wire:click="openAi" class="rounded bg-purple-600 px-3 py-2 text-sm text-white">✨ Generate AI</button>
-            <button wire:click="exportExcel" class="rounded bg-green-600 px-3 py-2 text-sm text-white">Export Excel</button>
+            <button wire:click="exportExcel" class="rounded bg-green-800 px-3 py-2 text-sm text-white">Export Excel</button>
         </div>
     </div>
 
@@ -58,7 +58,7 @@
                     </td>
                     <td class="px-4 py-3 text-right space-x-2">
                         <a href="{{ route('stocks.show', $stock) }}" class="text-blue-600">Detail</a>
-                        <button wire:click="openEdit({{ $stock->id }})" class="text-amber-700">Edit</button>
+                        <button wire:click="openEdit({{ $stock->id }})" class="text-amber-800">Edit</button>
                         <button wire:click="delete({{ $stock->id }})" wire:confirm="Hapus stok ini?" class="text-red-600">Hapus</button>
                     </td>
                 </tr>
@@ -89,7 +89,7 @@
             <div class="max-h-full w-full max-w-2xl space-y-3 overflow-y-auto rounded bg-white p-6 shadow-lg">
                 <h2 class="text-lg font-bold">Generate Item Stok dengan AI</h2>
                 <form wire:submit="generateAi" class="flex gap-2">
-                    <input type="text" wire:model="aiTopic" placeholder="mis. perlengkapan kantor, bahan kue…"
+                    <input type="text" wire:model="aiTopic" placeholder="mis. perlengkapan kantor, bahan kue…" aria-label="Topik item stok untuk AI"
                            class="flex-1 rounded border border-slate-300 px-3 py-2 text-sm">
                     <button type="submit" class="rounded bg-purple-600 px-3 py-2 text-sm text-white">
                         <span wire:loading.remove wire:target="generateAi">Generate</span>
@@ -106,7 +106,7 @@
                                 <input type="checkbox" wire:model="aiSelected" value="{{ $i }}" class="mt-1">
                                 <span>
                                     <span class="font-semibold">{{ $item['name'] }}</span>
-                                    <span class="text-slate-500">· {{ $item['sku'] ?? '-' }} · {{ $item['quantity'] }} {{ $item['unit'] }}
+                                    <span class="text-slate-600">· {{ $item['sku'] ?? '-' }} · {{ $item['quantity'] }} {{ $item['unit'] }}
                                         @if ($item['price']) · Rp {{ number_format($item['price'], 0, ',', '.') }} @endif
                                         · min {{ $item['min_stock'] }}</span>
                                     <span class="block text-slate-600">{{ $item['description'] }}</span>
