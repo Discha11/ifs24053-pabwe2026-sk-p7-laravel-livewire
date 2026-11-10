@@ -87,4 +87,21 @@ class RoutingTest extends TestCase
         $this->actingAs(User::factory()->create())->post('/logout')->assertRedirect(route('login'));
         $this->assertGuest();
     }
+
+    public function test_public_and_detail_pages_optimize_performance_seo_and_bfcache(): void
+    {
+        $loginResponse = $this->get('/login');
+        $loginResponse->assertOk()
+            ->assertSee('<meta name="description"', false)
+            ->assertDontSee('cdn.tailwindcss.com', false)
+            ->assertSee('defer="defer"', false);
+        $this->assertStringNotContainsString('no-store', (string) $loginResponse->headers->get('Cache-Control'));
+
+        $member = User::factory()->create();
+        $stock = Stock::factory()->for($member)->create();
+
+        $detailResponse = $this->actingAs($member)->get("/stocks/{$stock->id}");
+        $detailResponse->assertOk()
+            ->assertDontSee('<script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>', false);
+    }
 }

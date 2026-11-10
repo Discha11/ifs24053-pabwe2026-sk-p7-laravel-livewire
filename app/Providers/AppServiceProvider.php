@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
+use Livewire\Livewire;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,6 +30,8 @@ class AppServiceProvider extends ServiceProvider
 
         RateLimiter::for('1000-per-second', fn (Request $request) => Limit::perSecond(1000)
             ->by($request->user()?->id ?: $request->ip()));
+
+        Livewire::useScriptTagAttributes(['defer' => 'defer']);
 
         if (config('app.force_https')) {
             URL::forceScheme('https');

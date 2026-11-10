@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\AllowBackForwardCache;
 use App\Http\Middleware\EnsureRole;
 use App\Http\Middleware\EnsureStockOwnership;
 use Illuminate\Foundation\Application;
@@ -13,6 +14,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->prepend(AllowBackForwardCache::class);
+
         $middleware->alias([
             'role' => EnsureRole::class,
             'owns.stock' => EnsureStockOwnership::class,

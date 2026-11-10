@@ -12,7 +12,7 @@
             <div class="flex h-20 w-20 items-center justify-center rounded-full bg-slate-200 text-2xl">{{ strtoupper(substr($user->name, 0, 1)) }}</div>
         @endif
         <form wire:submit="savePhoto" class="space-y-2 text-sm">
-            <input type="file" wire:model="photo" accept="image/*">
+            <input type="file" wire:model="photo" accept="image/*" aria-label="Pilih foto profil">
             @error('photo') <p class="text-red-600">{{ $message }}</p> @enderror
             <button type="submit" class="rounded bg-blue-600 px-3 py-1 text-white">Ubah foto</button>
         </form>
@@ -22,8 +22,8 @@
         <h2 class="font-semibold">Data diri</h2>
         @foreach ([['name','Nama','text'],['username','Username','text'],['email','Email','email']] as [$f,$l,$t])
             <div>
-                <label class="mb-1 block text-sm font-medium">{{ $l }}</label>
-                <input type="{{ $t }}" wire:model="{{ $f }}" class="w-full rounded border border-slate-300 px-3 py-2 text-sm">
+                <label for="profile-{{ $f }}" class="mb-1 block text-sm font-medium">{{ $l }}</label>
+                <input id="profile-{{ $f }}" type="{{ $t }}" wire:model="{{ $f }}" class="w-full rounded border border-slate-300 px-3 py-2 text-sm">
                 @error($f) <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
             </div>
         @endforeach
@@ -34,8 +34,8 @@
         <h2 class="font-semibold">Ubah password</h2>
         @foreach ([['current_password','Password saat ini'],['password','Password baru'],['password_confirmation','Konfirmasi password baru']] as [$f,$l])
             <div>
-                <label class="mb-1 block text-sm font-medium">{{ $l }}</label>
-                <input type="password" wire:model="{{ $f }}" class="w-full rounded border border-slate-300 px-3 py-2 text-sm">
+                <label for="profile-{{ $f }}" class="mb-1 block text-sm font-medium">{{ $l }}</label>
+                <input id="profile-{{ $f }}" type="password" wire:model="{{ $f }}" class="w-full rounded border border-slate-300 px-3 py-2 text-sm">
                 @error($f) <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
             </div>
         @endforeach

@@ -14,16 +14,16 @@
 
     <form wire:submit="import" class="flex flex-wrap items-center gap-2 rounded bg-white p-3 text-sm shadow-sm">
         <span class="font-medium">Import Excel:</span>
-        <input type="file" wire:model="importFile" accept=".xlsx,.xls">
+        <input type="file" wire:model="importFile" accept=".xlsx,.xls" aria-label="Pilih file Excel untuk diimpor">
         <button type="submit" class="rounded bg-blue-600 px-3 py-1 text-white">Import</button>
         @error('importFile') <span class="text-red-600">{{ $message }}</span> @enderror
-        <span class="text-slate-500">Kolom: name, sku, qty, unit, price, min_stock, status, description</span>
+        <span class="text-slate-600">Kolom: name, sku, qty, unit, price, min_stock, status, description</span>
     </form>
 
     <div class="flex flex-wrap gap-2">
-        <input type="text" wire:model.live.debounce.300ms="search" placeholder="Cari nama / SKU…"
+        <input type="text" wire:model.live.debounce.300ms="search" placeholder="Cari nama / SKU…" aria-label="Cari nama atau SKU"
                class="w-64 rounded border border-slate-300 px-3 py-2 text-sm">
-        <select wire:model.live="statusFilter" class="rounded border border-slate-300 px-3 py-2 text-sm">
+        <select wire:model.live="statusFilter" aria-label="Filter status stok" class="rounded border border-slate-300 px-3 py-2 text-sm">
             <option value="">Semua status</option>
             @foreach ($statuses as $status)
                 <option value="{{ $status->value }}">{{ $status->label() }}</option>
@@ -33,7 +33,7 @@
 
     <div class="overflow-x-auto rounded bg-white shadow-sm">
         <table class="min-w-full text-left text-sm">
-            <thead class="bg-slate-50 text-xs uppercase text-slate-500">
+            <thead class="bg-slate-50 text-xs uppercase text-slate-600">
             <tr>
                 <th class="px-4 py-3">Nama</th><th class="px-4 py-3">SKU</th>
                 <th class="px-4 py-3">Qty</th><th class="px-4 py-3">Harga</th>
@@ -47,9 +47,9 @@
                     <td class="px-4 py-3">{{ $stock->sku ?? '-' }}</td>
                     <td class="px-4 py-3">
                         <div class="flex items-center gap-2">
-                            <button wire:click="adjust({{ $stock->id }}, -1)" class="h-6 w-6 rounded bg-slate-200">−</button>
+                            <button wire:click="adjust({{ $stock->id }}, -1)" aria-label="Kurangi stok {{ $stock->name }}" class="h-6 w-6 rounded bg-slate-200">−</button>
                             <span>{{ $stock->quantity }} {{ $stock->unit }}</span>
-                            <button wire:click="adjust({{ $stock->id }}, 1)" class="h-6 w-6 rounded bg-slate-200">+</button>
+                            <button wire:click="adjust({{ $stock->id }}, 1)" aria-label="Tambah stok {{ $stock->name }}" class="h-6 w-6 rounded bg-slate-200">+</button>
                         </div>
                     </td>
                     <td class="px-4 py-3">{{ $stock->price !== null ? 'Rp '.number_format((float) $stock->price, 0, ',', '.') : '-' }}</td>
@@ -58,12 +58,12 @@
                     </td>
                     <td class="px-4 py-3 text-right space-x-2">
                         <a href="{{ route('stocks.show', $stock) }}" class="text-blue-600">Detail</a>
-                        <button wire:click="openEdit({{ $stock->id }})" class="text-amber-600">Edit</button>
+                        <button wire:click="openEdit({{ $stock->id }})" class="text-amber-700">Edit</button>
                         <button wire:click="delete({{ $stock->id }})" wire:confirm="Hapus stok ini?" class="text-red-600">Hapus</button>
                     </td>
                 </tr>
             @empty
-                <tr><td colspan="6" class="px-4 py-6 text-center text-slate-500">Belum ada stok.</td></tr>
+                <tr><td colspan="6" class="px-4 py-6 text-center text-slate-600">Belum ada stok.</td></tr>
             @endforelse
             </tbody>
         </table>

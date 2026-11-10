@@ -4,8 +4,24 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="description" content="{{ $description ?? 'Aplikasi manajemen stok barang berbasis Laravel dan Livewire.' }}">
     <title>{{ $title ?? config('app.name', 'Stock Barang') }}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    @php
+        $manifestPath = public_path('build/manifest.json');
+        $viteCss = null;
+        if (is_file($manifestPath)) {
+            $manifest = json_decode(file_get_contents($manifestPath), true);
+            $entry = $manifest['resources/css/app.css']['file'] ?? null;
+            if ($entry && is_file(public_path('build/'.$entry))) {
+                $viteCss = file_get_contents(public_path('build/'.$entry));
+            }
+        }
+    @endphp
+    @if ($viteCss)
+        <style>{!! $viteCss !!}</style>
+    @elseif (file_exists(public_path('hot')))
+        @vite(['resources/css/app.css'])
+    @endif
 </head>
 <body class="bg-slate-100 text-slate-800 antialiased">
 @auth

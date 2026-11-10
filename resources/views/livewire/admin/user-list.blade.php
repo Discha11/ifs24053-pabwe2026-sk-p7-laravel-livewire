@@ -1,11 +1,11 @@
 <div class="space-y-4">
     <h1 class="text-2xl font-bold">Daftar User</h1>
-    <input type="text" wire:model.live.debounce.300ms="search" placeholder="Cari nama / username…"
+    <input type="text" wire:model.live.debounce.300ms="search" placeholder="Cari nama / username…" aria-label="Cari nama atau username"
            class="w-64 rounded border border-slate-300 px-3 py-2 text-sm">
 
     <div class="overflow-x-auto rounded bg-white shadow-sm">
         <table class="min-w-full text-left text-sm">
-            <thead class="bg-slate-50 text-xs uppercase text-slate-500">
+            <thead class="bg-slate-50 text-xs uppercase text-slate-600">
             <tr><th class="px-4 py-3">Nama</th><th class="px-4 py-3">Username</th><th class="px-4 py-3">Email</th>
                 <th class="px-4 py-3">Jumlah Stok</th><th class="px-4 py-3 text-right">Aksi</th></tr>
             </thead>

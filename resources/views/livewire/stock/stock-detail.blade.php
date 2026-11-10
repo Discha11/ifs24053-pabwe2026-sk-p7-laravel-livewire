@@ -1,9 +1,4 @@
 <div class="mx-auto max-w-3xl space-y-4">
-    @assets
-    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css">
-    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
-    @endassets
-
     <a href="{{ route('stocks.index') }}" class="text-sm text-blue-600">← Kembali</a>
 
     @if ($message)
@@ -19,16 +14,16 @@
             <div class="flex items-start justify-between gap-3">
                 <div>
                     <h1 class="text-2xl font-bold">{{ $stock->name }}</h1>
-                    <p class="text-sm text-slate-500">SKU: {{ $stock->sku ?? '-' }}</p>
+                    <p class="text-sm text-slate-600">SKU: {{ $stock->sku ?? '-' }}</p>
                 </div>
                 <span class="rounded-full px-3 py-1 text-xs {{ $stock->status->badgeClass() }}">{{ $stock->status->label() }}</span>
             </div>
 
             <div class="flex items-center gap-3">
-                <button wire:click="adjust(-1)" class="h-8 w-8 rounded bg-slate-200">−</button>
+                <button wire:click="adjust(-1)" aria-label="Kurangi stok" class="h-8 w-8 rounded bg-slate-200">−</button>
                 <span class="text-lg font-semibold">{{ $stock->quantity }} {{ $stock->unit }}</span>
-                <button wire:click="adjust(1)" class="h-8 w-8 rounded bg-slate-200">+</button>
-                <span class="text-sm text-slate-500">(min {{ $stock->min_stock }})</span>
+                <button wire:click="adjust(1)" aria-label="Tambah stok" class="h-8 w-8 rounded bg-slate-200">+</button>
+                <span class="text-sm text-slate-600">(min {{ $stock->min_stock }})</span>
             </div>
 
             <p>Harga: <strong>{{ $stock->price !== null ? 'Rp '.number_format((float) $stock->price, 0, ',', '.') : '-' }}</strong></p>
@@ -44,7 +39,7 @@
 
     <form wire:submit="uploadCover" class="flex flex-wrap items-center gap-2 rounded bg-white p-4 text-sm shadow-sm">
         <span class="font-medium">Cover:</span>
-        <input type="file" wire:model="cover" accept="image/*">
+        <input type="file" wire:model="cover" accept="image/*" aria-label="Pilih gambar cover stok">
         <button type="submit" class="rounded bg-blue-600 px-3 py-1 text-white">Unggah</button>
         @error('cover') <span class="text-red-600">{{ $message }}</span> @enderror
     </form>
@@ -54,7 +49,7 @@
             <h2 class="text-lg font-bold">Edit Stok</h2>
             @include('livewire.stock.partials.fields', ['markdown' => true])
             <div>
-                <label class="mb-1 block text-sm font-medium">Deskripsi (Markdown)</label>
+                <span class="mb-1 block text-sm font-medium">Deskripsi (Markdown)</span>
                 <div wire:ignore><div id="stock-editor"></div></div>
                 @error('description') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
             </div>
@@ -66,14 +61,40 @@
 
         @script
         <script>
-            const editor = new toastui.Editor({
-                el: document.querySelector('#stock-editor'),
-                height: '320px',
-                initialEditType: 'markdown',
-                previewStyle: 'tab',
-                initialValue: $wire.description ?? '',
-            });
-            editor.on('change', () => { $wire.description = editor.getMarkdown(); });
+            const initToastEditor = () => {
+                const el = document.querySelector('#stock-editor');
+                if (!el || el.dataset.initialized) return;
+                el.dataset.initialized = '1';
+                const editor = new toastui.Editor({
+                    el,
+                    height: '320px',
+                    initialEditType: 'markdown',
+                    previewStyle: 'tab',
+                    initialValue: $wire.description ?? '',
+                });
+                editor.on('change', () => { $wire.description = editor.getMarkdown(); });
+            };
+
+            if (window.toastui?.Editor) {
+                initToastEditor();
+            } else {
+                if (!document.querySelector('link[data-toastui-css]')) {
+                    const link = document.createElement('link');
+                    link.rel = 'stylesheet';
+                    link.href = 'https://uicdn.toast.com/editor/latest/toastui-editor.min.css';
+                    link.dataset.toastuiCss = '1';
+                    document.head.appendChild(link);
+                }
+                if (!document.querySelector('script[data-toastui-js]')) {
+                    const script = document.createElement('script');
+                    script.src = 'https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js';
+                    script.dataset.toastuiJs = '1';
+                    script.onload = initToastEditor;
+                    document.head.appendChild(script);
+                } else {
+                    document.querySelector('script[data-toastui-js]').addEventListener('load', initToastEditor, { once: true });
+                }
+            }
         </script>
         @endscript
     @endif
