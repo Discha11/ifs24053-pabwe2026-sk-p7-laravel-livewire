@@ -111,10 +111,15 @@ class StockListLivewireTest extends TestCase
     {
         $other = Stock::factory()->create();
 
-        $component = Livewire::actingAs($this->user)->test(StockList::class);
-        $component->call('openEdit', $other->id)->assertForbidden();
-        $component->call('delete', $other->id)->assertForbidden();
-        $component->call('adjust', $other->id, 1)->assertForbidden();
+        foreach ([
+            ['openEdit', [$other->id]],
+            ['delete', [$other->id]],
+            ['adjust', [$other->id, 1]],
+        ] as [$method, $args]) {
+            Livewire::actingAs($this->user)->test(StockList::class)
+                ->call($method, ...$args)
+                ->assertForbidden();
+        }
 
         $this->assertDatabaseHas('stocks', ['id' => $other->id]);
     }
@@ -221,6 +226,7 @@ class StockListLivewireTest extends TestCase
         $this->app->instance(AiClientInterface::class, $client);
 
         Livewire::actingAs($this->user)->test(StockList::class)
+            ->call('openAi')
             ->set('aiTopic', 'apa saja')
             ->call('generateAi')
             ->assertSet('aiItems', [])
